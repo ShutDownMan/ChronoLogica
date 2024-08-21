@@ -34,8 +34,8 @@ pub enum TokenKind {
     ISO8601Timestamp,
     TimeInterval,
 
-    Identifier,
     Number,
+    Identifier,
 
     SingleLineString,
     MultiLineString,
@@ -70,20 +70,20 @@ pub fn get_token_kind_pattern(kind: &TokenKind) -> &'static str {
 
         TokenKind::UnixTimestamp => r"ut\d+",
         TokenKind::ISO8601Timestamp => r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}",
-        TokenKind::TimeInterval => r"\d+[smhd]",
+        TokenKind::TimeInterval => r"\d+(\.\d+)?[smhd]",
 
-        TokenKind::Identifier => r"[a-zA-Z0-9_]+",
         TokenKind::Number => r"\d+(\.\d+)?([eE][+-]?\d+)?",
+        TokenKind::Identifier => r"[a-zA-Z0-9_]+",
 
-        TokenKind::SingleLineString => r#""[^"]*""#,
-        TokenKind::MultiLineString => r#""""[^"]*""""#,
+        TokenKind::SingleLineString => r#""[^"]*(?:"|$)"#,
+        TokenKind::MultiLineString => r#""""[^"]*(?:"""|$)"#,
         TokenKind::OpenBracket => r"\[",
         TokenKind::CloseBracket => r"\]",
         TokenKind::OpenParen => r"\(",
         TokenKind::CloseParen => r"\)",
 
         TokenKind::SingleLineComment => r"//.*",
-        TokenKind::MultiLineComment => r"/\*.*?\*/",
+        TokenKind::MultiLineComment => r"/\*.*?(?:\*/|$)",
 
         TokenKind::Comma => r",",
         TokenKind::Plus => r"\+",

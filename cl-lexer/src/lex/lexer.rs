@@ -83,10 +83,19 @@ fn check_token(token: &Token, program: &str, rest: &str) -> Result<()> {
 
             Ok(())
         },
+        super::token::TokenKind::MultiLineComment => {
+            // check if comment is closed
+            if !token.lexeme.ends_with("*/") {
+                error!("Multi line comment at line {} column {} is not closed", current_line, current_column);
+                return Err(anyhow::anyhow!("Multi line comment is not closed"))
+            }
+
+            Ok(())
+        },
         super::token::TokenKind::Identifier => {
             // check if identifier starts with a number
             if token.lexeme.chars().next().unwrap().is_numeric() {
-                error!("Identifier at line {} column {} starts with a number", current_line, current_column);
+                error!("Identifier '{}' at line {} column {} starts with a number", token.lexeme, current_line, current_column);
                 return Err(anyhow::anyhow!("Identifier starts with a number"));
             }
 
